@@ -6,11 +6,13 @@ import StatsBar from '../components/StatsBar';
 import CheckInForm from '../components/CheckInForm';
 import PatientRow from '../components/PatientRow';
 import Toast from '../components/Toast';
-import { Stethoscope, ChevronRight, AlertCircle } from 'lucide-react';
+import { Stethoscope, ChevronRight, AlertCircle, Zap, CheckCircle2, XCircle } from 'lucide-react';
 
 const ReceptionistPage = () => {
   const { queueState, loading, error, connectionStatus, loadQueue, showToast, toast } = useQueueState();
   const [actionLoading, setActionLoading] = useState(false);
+  const [raceResult, setRaceResult] = useState(null);
+  const [raceFiring, setRaceFiring] = useState(false);
 
   const handleCheckIn = async (name) => {
     setActionLoading(true);
@@ -30,6 +32,29 @@ const ReceptionistPage = () => {
     } catch {
       showToast('Could not call next patient.', 'error');
     } finally { setActionLoading(false); }
+  };
+
+  const handleRaceDemo = async () => {
+    setRaceFiring(true);
+    setRaceResult(null);
+    const BASE = 'http://localhost:8080/api/v1/queue';
+    const fire = () => fetch(`${BASE}/call-next`, { method: 'POST' });
+    const [r1, r2] = await Promise.all([fire(), fire()]);
+
+    const parse = async (res) => {
+      if (res.status === 204) return { ok: false, error: 'No waiting patients (queue empty)' };
+      if (res.ok) {
+        const d = await res.json();
+        const called = d.entries?.find(e => e.status === 'IN_PROGRESS');
+        return { ok: true, token: called?.tokenNumber, name: called?.patientName };
+      }
+      const err = await res.json().catch(() => ({}));
+      return { ok: false, error: err.error || err.message || `HTTP ${res.status} — blocked by DB lock` };
+    };
+
+    const results = await Promise.all([parse(r1), parse(r2)]);
+    setRaceResult(results);
+    setRaceFiring(false);
   };
 
   const handleDone = async (id) => {
@@ -91,6 +116,46 @@ const ReceptionistPage = () => {
           >
             Call Next <ChevronRight size={15} />
           </button>
+        </div>
+
+        <div className="mb-5 border border-amber-200 rounded-lg bg-amber-50 overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 border-b border-amber-200">
+            <div>
+              <span className="text-xs font-bold text-amber-800 uppercase tracking-wide">Race Condition Demo</span>
+              <p className="text-xs text-amber-700 mt-0.5">Ensure exactly <strong>1 patient is WAITING</strong>, then fire. One request wins the DB lock — the other is blocked.</p>
+            </div>
+            <button
+              id="race-demo-btn"
+              onClick={handleRaceDemo}
+              disabled={raceFiring || actionLoading}
+              className="inline-flex items-center justify-center gap-2 h-9 px-4 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white text-xs font-bold rounded-md transition-colors shadow-sm whitespace-nowrap w-full sm:w-auto"
+            >
+              <Zap size={13} />
+              {raceFiring ? 'Firing...' : 'Trigger Race'}
+            </button>
+          </div>
+
+          {raceResult && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-amber-200">
+              {raceResult.map((res, i) => (
+                <div key={i} className={`flex items-start gap-3 px-4 py-3 ${
+                  res.ok ? 'bg-emerald-50' : 'bg-red-50'
+                }`}>
+                  {res.ok
+                    ? <CheckCircle2 size={18} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+                    : <XCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />}
+                  <div>
+                    <div className={`text-xs font-bold ${ res.ok ? 'text-emerald-800' : 'text-red-700'}`}>
+                      Request {i + 1}: {res.ok ? 'Succeeded' : 'Blocked by DB Lock'}
+                    </div>
+                    <div className="text-xs text-slate-600 mt-0.5">
+                      {res.ok ? `Called #${res.token} — ${res.name}` : res.error}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden mb-6">
