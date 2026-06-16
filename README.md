@@ -22,29 +22,25 @@ A modern, real-time queue management system for neighborhood clinics. Features a
 
 ## 🚀 How to Run Locally
 
-### 1. Start the Databases
-The project uses Docker to run PostgreSQL and Redis. Ensure Docker Desktop is running, then start the containers:
+### 1. Start the Entire Stack
+The project uses a complete Docker Compose setup that spins up the Frontend, Backend, PostgreSQL, and Redis in one command. Ensure Docker Desktop is running, then run:
 ```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
-*(Postgres runs on port `5433`, Redis on port `6379`)*
+*(This will build the frontend and backend images from scratch on the first run. The `-d` flag runs them in the background.)*
 
-### 2. Start the Backend (Spring Boot)
-Open the `backend` folder in your IDE (IntelliJ IDEA recommended) or use Maven directly:
-```bash
-cd backend
-./mvnw spring-boot:run
-```
-*(The backend runs on `http://localhost:8080`)*
+### 2. Access the Application
+Once the containers are up and running, open your browser:
+- **Receptionist Dashboard**: [http://localhost:3000/receptionist](http://localhost:3000/receptionist)
+- **Patient Display**: [http://localhost:3000/display](http://localhost:3000/display)
 
-### 3. Start the Frontend (React)
-Open a new terminal window, navigate to the frontend folder, and start the development server:
+*(The backend API is exposed on `http://localhost:8080`, Postgres on `5433`, and Redis on `6379`)*
+
+### 3. Stopping the Stack
+To stop the application and database, run:
 ```bash
-cd frontend
-npm install
-npm start
+docker-compose down
 ```
-*(The frontend runs on `http://localhost:3000`)*
 
 ---
 

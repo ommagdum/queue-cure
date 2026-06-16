@@ -13,15 +13,55 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - queuecure-network
 
   redis:
     image: redis:7
     container_name: queuecure-redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - queuecure-network
+
+  backend:
+    build: 
+      context: ./backend
+    container_name: queuecure-backend
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/queuecure
+      - SPRING_DATASOURCE_USERNAME=queuecure
+      - SPRING_DATASOURCE_PASSWORD=queuecure
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - queuecure-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: queuecure-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - queuecure-network
 
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  queuecure-network:
+    driver: bridge
