@@ -1,21 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
-
 const WS_URL = 'http://localhost:8080/ws';
-
 const useWebSocket = (onMessage) => {
   const [connectionStatus, setConnectionStatus] = useState('CONNECTING');
   const clientRef = useRef(null);
-
   useEffect(() => {
     const client = new Client({
       webSocketFactory: () => {
         const SockJS = require('sockjs-client');
         return new SockJS(WS_URL);
       },
-
       reconnectDelay: 5000,
-
       onConnect: () => {
         setConnectionStatus('LIVE');
         client.subscribe('/topic/queue-updates', (message) => {
@@ -23,18 +18,13 @@ const useWebSocket = (onMessage) => {
           onMessage(queueState);
         });
       },
-
       onDisconnect: () => setConnectionStatus('RECONNECTING'),
       onStompError:  () => setConnectionStatus('RECONNECTING'),
     });
-
     client.activate();
     clientRef.current = client;
-
     return () => { client.deactivate(); };
   }, []); 
-
   return connectionStatus;
 };
-
 export default useWebSocket;

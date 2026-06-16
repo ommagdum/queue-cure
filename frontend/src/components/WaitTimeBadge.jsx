@@ -1,7 +1,6 @@
-// components/WaitTimeBadge.jsx
+
 import React from 'react';
 import { Clock } from 'lucide-react';
-
 const WaitTimeBadge = ({ minutes, status }) => {
   if (status !== 'WAITING' || minutes === null || minutes === undefined) return null;
   return (
@@ -11,5 +10,4 @@ const WaitTimeBadge = ({ minutes, status }) => {
     </span>
   );
 };
-
 export default WaitTimeBadge;

@@ -1,24 +1,19 @@
-// pages/DisplayPage.jsx
+
 import React from 'react';
 import useQueueState from '../hooks/useQueueState';
 import ConnectionIndicator from '../components/ConnectionIndicator';
 import StatusBadge from '../components/StatusBadge';
 import Toast from '../components/Toast';
 import { Stethoscope, Clock } from 'lucide-react';
-
 const DisplayPage = () => {
   const { queueState, connectionStatus, toast } = useQueueState();
-
   const entries    = queueState?.entries || [];
   const stats      = queueState?.stats;
   const inProgress = entries.find(e => e.status === 'IN_PROGRESS');
   const waiting    = entries.filter(e => e.status === 'WAITING');
   const nextUp     = waiting[0];
-
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
-
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 px-8 h-14 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <Stethoscope size={18} className="text-blue-600" />
@@ -27,14 +22,9 @@ const DisplayPage = () => {
         </div>
         <ConnectionIndicator status={connectionStatus} />
       </header>
-
-      {/* Main Grid */}
       <main className="flex-1 max-w-5xl mx-auto w-full px-8 py-10 grid grid-cols-2 gap-8 items-start">
-
-        {/* Left — Now Serving */}
         <div className="flex flex-col items-start">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">Now Serving</p>
-
           {inProgress ? (
             <>
               <div className="text-9xl font-bold text-slate-900 leading-none mb-3">
@@ -52,11 +42,7 @@ const DisplayPage = () => {
             </>
           )}
         </div>
-
-        {/* Right — Queue Info */}
         <div className="flex flex-col gap-5">
-
-          {/* Up Next */}
           <div className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">Up Next</p>
             {nextUp ? (
@@ -75,8 +61,6 @@ const DisplayPage = () => {
               <p className="text-slate-400 text-sm">No patients waiting</p>
             )}
           </div>
-
-          {/* Waiting List */}
           <div className="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
             <div className="px-6 py-3 border-b border-gray-100 bg-slate-50">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
@@ -103,8 +87,6 @@ const DisplayPage = () => {
               </div>
             )}
           </div>
-
-          {/* Stats Row */}
           <div className="grid grid-cols-3 gap-3">
             <div className="border border-gray-200 rounded-lg p-4 text-center bg-white shadow-sm">
               <div className="text-2xl font-bold text-slate-900">{stats?.totalWaiting ?? 0}</div>
@@ -121,10 +103,8 @@ const DisplayPage = () => {
           </div>
         </div>
       </main>
-
       <Toast toast={toast} />
     </div>
   );
 };
-
 export default DisplayPage;

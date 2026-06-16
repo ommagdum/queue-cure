@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './index.css';
 import ReceptionistPage from './pages/ReceptionistPage';
 import DisplayPage from './pages/DisplayPage';
-
 function App() {
   return (
     <BrowserRouter>
@@ -15,5 +14,4 @@ function App() {
     </BrowserRouter>
   );
 }
-
 export default App;

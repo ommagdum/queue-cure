@@ -1,12 +1,9 @@
 const BASE_URL = 'http://localhost:8080/api/v1/queue';
-
 export const fetchQueue = async () => {
     const res = await fetch(`${BASE_URL}/`);
     if (!res.ok) throw new Error('Failed to fetch queue');
     return res.json();
 };
-
-
 export const checkInPatient = async (patientName) => {
     const res = await fetch(`${BASE_URL}/checkin`, {
         method: 'POST',
@@ -18,7 +15,6 @@ export const checkInPatient = async (patientName) => {
     if (!res.ok) throw new Error('Check-In failed');
     return res.json();
 };
-
 export const callNextPatient = async () => {
     const res = await fetch(`${BASE_URL}/call-next`, {
         method: 'POST'
@@ -27,7 +23,6 @@ export const callNextPatient = async () => {
     if (!res.ok) throw new Error('Call next failed');
     return res.json();
 };
-
 export const markDone = async (id) => {
     const res = await fetch(`${BASE_URL}/${id}/done`, {
         method: 'POST'
@@ -38,7 +33,6 @@ export const markDone = async (id) => {
     } 
     return res.json();
 };
-
 export const markNoShow = async (id) => {
     const res = await fetch(`${BASE_URL}/${id}/no-show`, {
         method: 'POST'
@@ -49,7 +43,6 @@ export const markNoShow = async (id) => {
     } 
     return res.json();
 };
-
 export const fetchStats = async () => {
     const res = await fetch(`${BASE_URL}/stats`);
     if (!res.ok) {

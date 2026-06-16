@@ -1,21 +1,17 @@
-// components/CheckInForm.jsx
+
 import React, { useState } from 'react';
 import { UserPlus } from 'lucide-react';
-
 const CheckInForm = ({ onCheckIn, loading }) => {
   const [name, setName] = useState('');
-
   const handleSubmit = async () => {
     const trimmed = name.trim();
     if (!trimmed) return;
     await onCheckIn(trimmed);
     setName('');
   };
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') handleSubmit();
   };
-
   return (
     <div className="flex items-center gap-2 mb-5">
       <input
@@ -41,5 +37,4 @@ const CheckInForm = ({ onCheckIn, loading }) => {
     </div>
   );
 };
-
 export default CheckInForm;

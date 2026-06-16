@@ -1,7 +1,6 @@
-// components/StatsBar.jsx
+
 import React from 'react';
 import { Users, UserCheck, Clock, Timer } from 'lucide-react';
-
 const StatCard = ({ Icon, label, value, valueClass = 'text-slate-900' }) => (
   <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-4 flex-1 min-w-[130px] shadow-sm">
     <div className="w-8 h-8 rounded-md bg-slate-50 border border-gray-200 flex items-center justify-center text-slate-500 flex-shrink-0">
@@ -13,7 +12,6 @@ const StatCard = ({ Icon, label, value, valueClass = 'text-slate-900' }) => (
     </div>
   </div>
 );
-
 const StatsBar = ({ stats }) => {
   if (!stats) return null;
   const { totalWaiting, currentlyInProgress, avgConsultMinutes, estimatedNextWaitMinutes } = stats;
@@ -26,5 +24,4 @@ const StatsBar = ({ stats }) => {
     </div>
   );
 };
-
 export default StatsBar;
