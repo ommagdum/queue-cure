@@ -1,95 +1,31 @@
+// components/Toast.jsx
 import React, { useEffect, useState } from 'react';
-
-const toastStyle = `
-  @keyframes slideUp {
-    from { transform: translateY(100px); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
-  }
-  @keyframes slideDown {
-    from { transform: translateY(0);    opacity: 1; }
-    to   { transform: translateY(100px); opacity: 0; }
-  }
-`;
-if (!document.getElementById('toast-style')) {
-  const styleTag = document.createElement('style');
-  styleTag.id = 'toast-style';
-  styleTag.innerHTML = toastStyle;
-  document.head.appendChild(styleTag);
-}
+import { CheckCircle, AlertCircle, Zap, Info } from 'lucide-react';
 
 const TOAST_CONFIG = {
-  success: {
-    background: 'var(--color-status-done)',
-    icon: '✓',
-  },
-  error: {
-    background: 'var(--color-reconnecting)',
-    icon: '✕',
-  },
-  conflict: {
-    background: 'var(--color-accent-orange)',
-    icon: '⚡',
-  },
-  info: {
-    background: 'var(--color-primary-blue)',
-    icon: 'ℹ',
-  },
+  success:  { className: 'bg-emerald-600', Icon: CheckCircle },
+  error:    { className: 'bg-red-600',     Icon: AlertCircle },
+  conflict: { className: 'bg-amber-500',   Icon: Zap },
+  info:     { className: 'bg-slate-700',   Icon: Info },
 };
 
 const Toast = ({ toast }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (toast) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
+    setVisible(!!toast);
   }, [toast]);
 
   if (!toast) return null;
 
   const config = TOAST_CONFIG[toast.type] || TOAST_CONFIG.info;
-
-  const containerStyles = {
-    position: 'fixed',
-    bottom: '32px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    zIndex: 1000,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    padding: '14px 24px',
-    borderRadius: 'var(--radius-pill)',
-    background: config.background,
-    color: '#fff',
-    fontFamily: 'var(--font-family-base)',
-    fontWeight: 'var(--font-weight-semibold)',
-    fontSize: 'var(--font-size-body)',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-    animation: visible
-      ? 'slideUp 0.3s ease-out forwards'
-      : 'slideDown 0.3s ease-in forwards',
-    whiteSpace: 'nowrap',
-  };
-
-  const iconStyles = {
-    width: '24px',
-    height: '24px',
-    borderRadius: '50%',
-    background: 'rgba(255,255,255,0.25)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '13px',
-    fontWeight: 'var(--font-weight-bold)',
-    flexShrink: 0,
-  };
+  const { Icon } = config;
 
   return (
-    <div style={containerStyles}>
-      <span style={iconStyles}>{config.icon}</span>
+    <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3.5 rounded-lg text-white text-sm font-semibold shadow-lg transition-all ${
+      visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+    } ${config.className}`}>
+      <Icon size={16} />
       {toast.message}
     </div>
   );

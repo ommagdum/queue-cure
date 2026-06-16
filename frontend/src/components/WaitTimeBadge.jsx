@@ -1,26 +1,13 @@
+// components/WaitTimeBadge.jsx
 import React from 'react';
+import { Clock } from 'lucide-react';
 
 const WaitTimeBadge = ({ minutes, status }) => {
-  if (status !== 'WAITING' || minutes === null || minutes === undefined) {
-    return null;
-  }
-
-  const containerStyles = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    padding: '4px 10px',
-    borderRadius: 'var(--radius-pill)',
-    fontSize: 'var(--font-size-small)',
-    fontWeight: 'var(--font-weight-semibold)',
-    backgroundColor: 'var(--color-accent-yellow-light)',
-    color: '#8B6200',   
-    whiteSpace: 'nowrap',
-  };
-
+  if (status !== 'WAITING' || minutes === null || minutes === undefined) return null;
   return (
-    <span style={containerStyles}>
-      ⏱ ~{minutes} min
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
+      <Clock size={11} />
+      ~{minutes} min
     </span>
   );
 };

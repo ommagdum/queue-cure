@@ -1,61 +1,20 @@
+// components/ConnectionIndicator.jsx
 import React from 'react';
 
-const pulseStyle = `
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.4; transform: scale(0.85); }
-  }
-`;
-if (!document.getElementById('pulse-style')) {
-  const styleTag = document.createElement('style');
-  styleTag.id = 'pulse-style';
-  styleTag.innerHTML = pulseStyle;
-  document.head.appendChild(styleTag);
-}
-
 const ConnectionIndicator = ({ status }) => {
-  const isLive         = status === 'LIVE';
+  const isLive = status === 'LIVE';
   const isReconnecting = status === 'RECONNECTING';
 
-  const containerStyles = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '6px 16px',
-    borderRadius: 'var(--radius-pill)',
-    fontSize: 'var(--font-size-small)',
-    fontWeight: 'var(--font-weight-semibold)',
-    backgroundColor: isLive
-      ? 'rgba(52, 199, 89, 0.15)'
-      : 'rgba(255, 59, 48, 0.15)',
-    color: isLive
-      ? 'var(--color-live)'
-      : 'var(--color-reconnecting)',
-    border: `1.5px solid ${isLive ? 'var(--color-live)' : 'var(--color-reconnecting)'}`,
-    transition: 'var(--transition-base)',
-  };
-
-  const dotStyles = {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    backgroundColor: isLive
-      ? 'var(--color-live)'
-      : 'var(--color-reconnecting)',
-    flexShrink: 0,
-    animation: isReconnecting ? 'pulse 1.2s ease-in-out infinite' : 'none',
-  };
-
-  const label = isLive
-    ? '🟢 Live'
-    : isReconnecting
-    ? '🔴 Reconnecting…'
-    : '⚪ Connecting…';
-
   return (
-    <span style={containerStyles}>
-      <span style={dotStyles} />
-      {label}
+    <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold ${
+      isLive
+        ? 'bg-white border-gray-200 text-slate-700'
+        : 'bg-white border-red-200 text-red-700'
+    }`}>
+      <span className={`w-2 h-2 rounded-full ${
+        isLive ? 'bg-emerald-500 animate-pulse' : isReconnecting ? 'bg-red-500 animate-pulse' : 'bg-gray-400'
+      }`} />
+      {isLive ? 'Live' : isReconnecting ? 'Reconnecting...' : 'Connecting...'}
     </span>
   );
 };

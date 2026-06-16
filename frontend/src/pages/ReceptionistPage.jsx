@@ -1,3 +1,4 @@
+// pages/ReceptionistPage.jsx
 import React, { useState } from 'react';
 import useQueueState from '../hooks/useQueueState';
 import { checkInPatient, callNextPatient, markDone, markNoShow } from '../api/queueApi';
@@ -6,6 +7,7 @@ import StatsBar from '../components/StatsBar';
 import CheckInForm from '../components/CheckInForm';
 import PatientRow from '../components/PatientRow';
 import Toast from '../components/Toast';
+import { Stethoscope, ChevronRight, AlertCircle } from 'lucide-react';
 
 const ReceptionistPage = () => {
   const { queueState, loading, error, connectionStatus, loadQueue, showToast, toast } = useQueueState();
@@ -15,43 +17,31 @@ const ReceptionistPage = () => {
     setActionLoading(true);
     try {
       await checkInPatient(name);
-      showToast(`${name} checked in successfully ✓`, 'success');
+      showToast(`${name} checked in`, 'success');
     } catch {
-      showToast('Check-in failed. Please try again.', 'error');
-    } finally {
-      setActionLoading(false);
-    }
+      showToast('Check-in failed. Try again.', 'error');
+    } finally { setActionLoading(false); }
   };
 
   const handleCallNext = async () => {
     setActionLoading(true);
     try {
       const result = await callNextPatient();
-      if (!result) {
-        showToast('No patients waiting', 'info');
-      }
+      if (!result) showToast('No patients waiting', 'info');
     } catch {
       showToast('Could not call next patient.', 'error');
-    } finally {
-      setActionLoading(false);
-    }
+    } finally { setActionLoading(false); }
   };
 
   const handleDone = async (id) => {
     setActionLoading(true);
     try {
       await markDone(id);
-      showToast('Consultation marked complete ✓', 'success');
+      showToast('Consultation complete', 'success');
     } catch (err) {
-      if (err.message?.includes('conflict')) {
-        showToast('Action conflict — queue refreshed', 'conflict');
-        await loadQueue();
-      } else {
-        showToast(err.message || 'Action failed', 'error');
-      }
-    } finally {
-      setActionLoading(false);
-    }
+      showToast('Action conflict — queue refreshed', 'conflict');
+      await loadQueue();
+    } finally { setActionLoading(false); }
   };
 
   const handleNoShow = async (id) => {
@@ -59,171 +49,81 @@ const ReceptionistPage = () => {
     try {
       await markNoShow(id);
       showToast('Marked as no-show', 'info');
-    } catch (err) {
-      if (err.message?.includes('conflict')) {
-        showToast('Action conflict — queue refreshed', 'conflict');
-        await loadQueue();
-      } else {
-        showToast(err.message || 'Action failed', 'error');
-      }
-    } finally {
-      setActionLoading(false);
-    }
+    } catch {
+      showToast('Action conflict — queue refreshed', 'conflict');
+      await loadQueue();
+    } finally { setActionLoading(false); }
   };
-
-  const pageStyles = {
-    minHeight: '100vh',
-    background: 'var(--color-bg-cream)',
-    fontFamily: 'var(--font-family-base)',
-  };
-
-  const headerStyles = {
-    background: 'var(--color-primary-blue)',
-    padding: '0 var(--space-xl)',
-    height: 'var(--header-height)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-    boxShadow: '0 2px 16px rgba(27,111,242,0.2)',
-  };
-
-  const logoStyles = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    color: '#fff',
-  };
-
-  const logoTitleStyles = {
-    fontSize: 'var(--font-size-h3)',
-    fontWeight: 'var(--font-weight-bold)',
-    letterSpacing: '-0.01em',
-  };
-
-  const logoSubStyles = {
-    fontSize: 'var(--font-size-xs)',
-    opacity: 0.75,
-    fontWeight: 'var(--font-weight-medium)',
-  };
-
-  const mainStyles = {
-    maxWidth: 'var(--container-max-width)',
-    margin: '0 auto',
-    padding: 'var(--space-xl) var(--space-xl)',
-  };
-
-  const queueHeaderStyles = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 'var(--space-md)',
-  };
-
-  const queueTitleStyles = {
-    fontSize: 'var(--font-size-h3)',
-    fontWeight: 'var(--font-weight-bold)',
-    color: 'var(--color-text-primary)',
-  };
-
-  const callNextBtnStyles = {
-    height: '44px',
-    padding: '0 24px',
-    borderRadius: 'var(--radius-pill)',
-    border: 'none',
-    background: 'var(--color-accent-orange)',
-    color: '#fff',
-    fontFamily: 'var(--font-family-base)',
-    fontWeight: 'var(--font-weight-semibold)',
-    fontSize: 'var(--font-size-body)',
-    cursor: actionLoading ? 'not-allowed' : 'pointer',
-    opacity: actionLoading ? 0.7 : 1,
-    transition: 'var(--transition-fast)',
-    boxShadow: '0 4px 14px rgba(255,140,59,0.35)',
-  };
-
-  const emptyStyles = {
-    textAlign: 'center',
-    padding: 'var(--space-section) 0',
-    color: 'var(--color-text-secondary)',
-  };
-
 
   if (error) {
     return (
-      <div style={{ ...pageStyles, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center', color: 'var(--color-reconnecting)' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
-          <p style={{ fontSize: 'var(--font-size-h3)', fontWeight: 'var(--font-weight-semibold)' }}>{error}</p>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center text-red-600">
+          <AlertCircle size={48} className="mx-auto mb-4" />
+          <p className="text-lg font-semibold">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={pageStyles}>
+    <div className="min-h-screen bg-slate-50 font-sans">
 
-      <header style={headerStyles}>
-        <div style={logoStyles}>
-          <span style={{ fontSize: '24px' }}>🏥</span>
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 px-6 h-14 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center gap-2.5">
+          <Stethoscope size={20} className="text-blue-600" />
           <div>
-            <div style={logoTitleStyles}>Queue Cure</div>
-            <div style={logoSubStyles}>Receptionist Dashboard</div>
+            <span className="text-sm font-bold text-slate-900">Queue Cure</span>
+            <span className="text-xs text-slate-500 ml-2">Receptionist Dashboard</span>
           </div>
         </div>
         <ConnectionIndicator status={connectionStatus} />
       </header>
 
-      <main style={mainStyles}>
+      {/* Main */}
+      <main className="max-w-5xl mx-auto px-6 py-6">
 
         <StatsBar stats={queueState?.stats} />
 
-        <CheckInForm onCheckIn={handleCheckIn} loading={actionLoading} />
-
-        <div style={queueHeaderStyles}>
-          <h2 style={queueTitleStyles}>
-            Today's Queue
-            {queueState?.entries?.length > 0 && (
-              <span style={{
-                marginLeft: '10px',
-                fontSize: 'var(--font-size-body)',
-                fontWeight: 'var(--font-weight-medium)',
-                color: 'var(--color-text-secondary)',
-              }}>
-                ({queueState.entries.length} patients)
-              </span>
-            )}
-          </h2>
+        {/* Action Bar */}
+        <div className="flex items-center justify-between mb-4">
+          <CheckInForm onCheckIn={handleCheckIn} loading={actionLoading} />
           <button
             id="call-next-btn"
-            style={callNextBtnStyles}
             onClick={handleCallNext}
             disabled={actionLoading}
+            className="inline-flex items-center gap-2 h-10 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
           >
-            📣 Call Next
+            Call Next <ChevronRight size={15} />
           </button>
         </div>
 
-        {loading ? (
-          <div style={emptyStyles}>
-            <div style={{ fontSize: '32px', marginBottom: '12px' }}>⏳</div>
-            <p>Loading queue…</p>
+        {/* Queue Table */}
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+
+          {/* Table Header */}
+          <div className="flex items-center gap-4 px-4 py-2.5 border-b border-gray-200 bg-slate-50">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              Today's Queue
+              {queueState?.entries?.length > 0 && (
+                <span className="ml-2 text-slate-400 normal-case font-normal">
+                  {queueState.entries.length} patients
+                </span>
+              )}
+            </span>
           </div>
-        ) : queueState?.entries?.length === 0 ? (
-          <div style={emptyStyles}>
-            <div style={{ fontSize: '48px', marginBottom: '12px' }}>🌿</div>
-            <p style={{ fontSize: 'var(--font-size-h3)', fontWeight: 'var(--font-weight-semibold)' }}>
-              Queue is empty
-            </p>
-            <p style={{ fontSize: 'var(--font-size-body)', marginTop: '8px' }}>
-              Check in the first patient above to get started
-            </p>
-          </div>
-        ) : (
-          <div>
-            {queueState?.entries?.map((entry) => (
+
+          {/* Queue Rows */}
+          {loading ? (
+            <div className="py-16 text-center text-slate-400 text-sm">Loading queue...</div>
+          ) : queueState?.entries?.length === 0 ? (
+            <div className="py-16 text-center">
+              <p className="text-slate-900 font-semibold">Queue is empty</p>
+              <p className="text-slate-500 text-sm mt-1">Check in the first patient above</p>
+            </div>
+          ) : (
+            queueState?.entries?.map((entry) => (
               <PatientRow
                 key={entry.id}
                 entry={entry}
@@ -231,9 +131,9 @@ const ReceptionistPage = () => {
                 onNoShow={handleNoShow}
                 loading={actionLoading}
               />
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </main>
 
       <Toast toast={toast} />

@@ -1,101 +1,28 @@
+// components/StatsBar.jsx
 import React from 'react';
+import { Users, UserCheck, Clock, Timer } from 'lucide-react';
 
-const StatCard = ({ icon, label, value, accent }) => {
-  const cardStyles = {
-    flex: 1,
-    background: 'var(--color-bg-white)',
-    borderRadius: 'var(--radius-md)',
-    padding: '16px 20px',
-    border: '1px solid var(--color-border-subtle)',
-    boxShadow: 'var(--shadow-card)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    minWidth: '140px',
-  };
-
-  const iconCircleStyles = {
-    width: '42px',
-    height: '42px',
-    borderRadius: '50%',
-    background: accent + '20',   
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '20px',
-    flexShrink: 0,
-  };
-
-  const textStyles = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '2px',
-  };
-
-  const valueStyles = {
-    fontSize: 'var(--font-size-h2)',
-    fontWeight: 'var(--font-weight-bold)',
-    color: accent,
-    lineHeight: 1.1,
-  };
-
-  const labelStyles = {
-    fontSize: 'var(--font-size-xs)',
-    fontWeight: 'var(--font-weight-medium)',
-    color: 'var(--color-text-secondary)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-  };
-
-  return (
-    <div style={cardStyles}>
-      <div style={iconCircleStyles}>{icon}</div>
-      <div style={textStyles}>
-        <span style={valueStyles}>{value}</span>
-        <span style={labelStyles}>{label}</span>
-      </div>
+const StatCard = ({ Icon, label, value, valueClass = 'text-slate-900' }) => (
+  <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-4 flex-1 min-w-[130px] shadow-sm">
+    <div className="w-8 h-8 rounded-md bg-slate-50 border border-gray-200 flex items-center justify-center text-slate-500 flex-shrink-0">
+      <Icon size={15} />
     </div>
-  );
-};
+    <div>
+      <div className={`text-lg font-bold leading-none ${valueClass}`}>{value}</div>
+      <div className="text-xs text-slate-500 uppercase tracking-wide mt-1 font-medium">{label}</div>
+    </div>
+  </div>
+);
 
 const StatsBar = ({ stats }) => {
   if (!stats) return null;
-
   const { totalWaiting, currentlyInProgress, avgConsultMinutes, estimatedNextWaitMinutes } = stats;
-
-  const barStyles = {
-    display: 'flex',
-    gap: 'var(--space-grid-gap)',
-    marginBottom: 'var(--space-lg)',
-    flexWrap: 'wrap',
-  };
-
   return (
-    <div style={barStyles}>
-      <StatCard
-        icon="🟡"
-        label="Waiting"
-        value={totalWaiting}
-        accent="var(--color-accent-yellow)"
-      />
-      <StatCard
-        icon="🟠"
-        label="In Progress"
-        value={currentlyInProgress}
-        accent="var(--color-accent-orange)"
-      />
-      <StatCard
-        icon="⏱"
-        label="Avg Consult"
-        value={`${avgConsultMinutes} min`}
-        accent="var(--color-primary-blue)"
-      />
-      <StatCard
-        icon="🔮"
-        label="Next Wait"
-        value={`~${estimatedNextWaitMinutes} min`}
-        accent="var(--color-primary-blue-dark)"
-      />
+    <div className="flex gap-3 mb-5 flex-wrap">
+      <StatCard Icon={Users}      label="Waiting"     value={totalWaiting}                      valueClass="text-amber-700" />
+      <StatCard Icon={UserCheck}  label="In Progress" value={currentlyInProgress}               valueClass="text-blue-700" />
+      <StatCard Icon={Clock}      label="Avg Consult" value={`${avgConsultMinutes} min`}        valueClass="text-slate-900" />
+      <StatCard Icon={Timer}      label="Next Wait"   value={`~${estimatedNextWaitMinutes} min`} valueClass="text-slate-900" />
     </div>
   );
 };
