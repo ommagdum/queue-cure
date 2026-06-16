@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+
+  --color-primary-blue:     #1B6FF2;   
+  --color-primary-blue-dark:#0A2540;   
+
+  --color-accent-orange:    #FF8C3B;   
+  --color-accent-yellow:    #FFC72C;   
+  --color-accent-yellow-light: #FFE08A; 
+
+  --color-bg-cream:         #FBF3E7;  
+  --color-bg-white:         #FFFFFF;  
+  --color-bg-dark:          #1E1E1E;  
+
+  --color-text-primary:     #1A1A1A;   
+  --color-text-secondary:   #6B6B6B;   
+  --color-text-on-blue:     #FFFFFF;   
+  --color-text-on-orange:   #FFFFFF;   
+
+  --color-status-waiting:   #FFC72C;  
+  --color-status-waiting-bg:#FFF8E1;
+  --color-status-progress:  #FF8C3B;   
+  --color-status-progress-bg:#FFF0E6;
+  --color-status-done:      #34C759;   
+  --color-status-done-bg:   #E8F8EC;
+  --color-status-noshow:    #6B6B6B;   
+  --color-status-noshow-bg: #F0F0F0;
+
+  --color-live:             #34C759;   
+  --color-reconnecting:     #FF3B30;   
+
+  --color-border-subtle:    #E8E2D6;   
+
+  --font-family-base:       'Poppins', 'Inter', sans-serif;
+
+  --font-size-h1:           48px;
+  --font-size-h2:           30px;
+  --font-size-h3:           19px;
+  --font-size-body:         16px;
+  --font-size-small:        13px;
+  --font-size-xs:           11px;
+
+  --font-weight-regular:    400;
+  --font-weight-medium:     500;
+  --font-weight-semibold:   600;
+  --font-weight-bold:       700;
+
+  --line-height-heading:    1.15;
+  --line-height-body:       1.6;
+
+ 
+  --radius-sm:              8px;   
+  --radius-md:              16px;   
+  --radius-lg:              28px;   
+  --radius-pill:            999px; 
+
+  --space-xs:               4px;
+  --space-sm:               8px;
+  --space-md:               16px;
+  --space-lg:               24px;
+  --space-xl:               40px;
+  --space-section:          80px;
+  --space-card-padding:     24px;
+  --space-grid-gap:         20px;
+
+  --shadow-card:            0 2px 12px rgba(0, 0, 0, 0.07);
+  --shadow-card-hover:      0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-button:          0 4px 14px rgba(27, 111, 242, 0.3);
+
+  --transition-fast:        0.15s ease-in-out;
+  --transition-base:        0.25s ease-in-out;
+
+  --container-max-width:    1200px;
+  --header-height:          64px;
+}
