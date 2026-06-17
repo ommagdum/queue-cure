@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/queue")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class QueueController {
     private final QueueService queueService;
@@ -48,5 +47,4 @@ public class QueueController {
     public ResponseEntity<?> getStats() {
         return ResponseEntity.ok(queueService.getFullSnapshot().getStats());
     }
-
 }

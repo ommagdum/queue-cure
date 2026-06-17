@@ -2,32 +2,27 @@ spring:
   application:
     name: backend
   datasource:
-    url: jdbc:postgresql://localhost:5433/queuecure
-    username: queuecure
-    password: queuecure
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5433/queuecure}
+    username: ${DATABASE_USERNAME:queuecure}
+    password: ${DATABASE_PASSWORD:queuecure}
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     open-in-view: false
     properties:
       hibernate:
-        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
   data:
     redis:
-      host: localhost
-      port: 6379
+      url: ${REDIS_URL:redis://localhost:6379}
   jackson:
     serialization:
       write-dates-as-timestamps: false
 
 clinic:
-  default_consult_minutes: 10
+  default_consult_minutes: ${DEFAULT_CONSULT_MINUTES:10}
 
 server:
-  port: 8080
-
+  port: ${PORT:8080}

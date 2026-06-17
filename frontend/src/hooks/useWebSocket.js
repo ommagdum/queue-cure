@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
-const WS_URL = 'http://localhost:8080/ws';
+import { API_BASE_URL } from '../config/api';
+
 const useWebSocket = (onMessage) => {
   const [connectionStatus, setConnectionStatus] = useState('CONNECTING');
   const clientRef = useRef(null);
+
   useEffect(() => {
     const client = new Client({
       webSocketFactory: () => {
         const SockJS = require('sockjs-client');
-        return new SockJS(WS_URL);
+        return new SockJS(`${API_BASE_URL}/ws`);
       },
       reconnectDelay: 5000,
       onConnect: () => {
@@ -24,7 +26,9 @@ const useWebSocket = (onMessage) => {
     client.activate();
     clientRef.current = client;
     return () => { client.deactivate(); };
-  }, []); 
+  }, []);
+
   return connectionStatus;
 };
+
 export default useWebSocket;

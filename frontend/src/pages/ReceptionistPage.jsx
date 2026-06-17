@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useQueueState from '../hooks/useQueueState';
 import { checkInPatient, callNextPatient, markDone, markNoShow } from '../api/queueApi';
+import { API_BASE_URL } from '../config/api';
 import ConnectionIndicator from '../components/ConnectionIndicator';
 import StatsBar from '../components/StatsBar';
 import CheckInForm from '../components/CheckInForm';
@@ -37,8 +38,7 @@ const ReceptionistPage = () => {
   const handleRaceDemo = async () => {
     setRaceFiring(true);
     setRaceResult(null);
-    const BASE = 'http://localhost:8080/api/v1/queue';
-    const fire = () => fetch(`${BASE}/call-next`, { method: 'POST' });
+    const fire = () => fetch(`${API_BASE_URL}/api/v1/queue/call-next`, { method: 'POST' });
     const [r1, r2] = await Promise.all([fire(), fire()]);
 
     const parse = async (res) => {

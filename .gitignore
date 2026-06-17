@@ -1,0 +1,23 @@
+# Environment variables - never commit secrets
+.env
+.env.local
+.env.production
+.env.development
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build outputs
+frontend/build/
+frontend/node_modules/
+
+# Backend
+backend/target/
+
+# Logs
+*.log
