@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchQueue } from '../api/queueApi';
 import { Client } from '@stomp/stompjs';
-const WS_URL = 'http://localhost:8080/ws';
+import { API_BASE_URL } from '../config/api';
 const useQueueState = () => {
   const [queueState, setQueueState]       = useState(null);
   const [loading, setLoading]             = useState(true);
@@ -24,7 +24,7 @@ const useQueueState = () => {
   useEffect(() => {
     const SockJS = require('sockjs-client');
     const client = new Client({
-      webSocketFactory: () => new SockJS(WS_URL),
+      webSocketFactory: () => new SockJS(`${API_BASE_URL}/ws`),
       reconnectDelay: 5000,
       onConnect: () => {
         setStatus('LIVE');
