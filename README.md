@@ -15,6 +15,24 @@
 
 ---
 
+## 🌐 Live Demo
+
+> **Open these two URLs side by side in separate browser windows to see the real-time sync in action:**
+
+| Screen | URL | Who uses it |
+|---|---|---|
+| 🖥 Receptionist Dashboard | [queue-cure.netlify.app/receptionist](https://queue-cure.netlify.app/receptionist) | The clinic receptionist |
+| 📺 Patient Display Screen | [queue-cure.netlify.app/display](https://queue-cure.netlify.app/display) | The waiting room TV |
+
+**Quick demo in 30 seconds:**
+1. Open both links above in two separate windows and place them side by side
+2. On the **receptionist** screen, type any name and click **Check In**
+3. Watch the **display** screen update instantly — no refresh needed
+4. Click **Call Next** → the patient appears as "Now Serving" on the display
+5. Try the **⚡ Trigger Race** button (with 1 patient waiting) to see the DB lock in action
+
+---
+
 ## 🔍 What is Queue Cure?
 
 Queue Cure solves a problem every neighborhood clinic faces — chaotic, manual patient queues. Patients are handed token numbers at check-in. The receptionist manages the queue from a dashboard while a dedicated **waiting room TV screen** automatically displays who is currently being seen, who is next, and estimated wait times — all updating **live, in real time**, with no page refresh.
@@ -143,11 +161,21 @@ npm start
 
 ## 🎬 Demo Walkthrough
 
-1. Open `/receptionist` and `/display` side by side in two browser windows
-2. On the receptionist screen, type a patient name and click **Check In** — watch the display screen update instantly
-3. Click **Call Next** — the patient moves to "Now Serving" on the display in real time
-4. Click **Done** — the next patient in the waiting queue automatically becomes the next up
-5. **Race Condition Demo:** Check in exactly 1 waiting patient, then click **⚡ Trigger Race** on the receptionist dashboard — watch one request succeed and one get blocked by the database lock, visually proving the `SELECT FOR UPDATE` concurrency control
+### Side-by-side setup
+
+Open two browser windows and snap them to opposite halves of your screen:
+- **Left window** → [queue-cure.netlify.app/receptionist](https://queue-cure.netlify.app/receptionist)
+- **Right window** → [queue-cure.netlify.app/display](https://queue-cure.netlify.app/display)
+
+Both screens will show a 🟢 **Live** badge in the top-right corner when the WebSocket connection is established.
+
+### Walkthrough steps
+1. Type a patient name on the receptionist screen → click **Check In** → watch the name appear on the display screen in under a second
+2. Add 2–3 more patients — watch the waiting queue and estimated times update on the display
+3. Click **Call Next** → the patient jumps to the large "Now Serving" slot on the display
+4. Click **Done** → the next patient automatically becomes "Now Serving"
+5. Mark a patient as **No Show** → watch the queue shift and wait times recalculate instantly
+6. **Race Condition Demo:** Ensure exactly **1 patient is WAITING**, then click **⚡ Trigger Race** — one request gets ✅ Succeeded, the other gets ❌ Blocked by DB Lock
 
 ---
 
